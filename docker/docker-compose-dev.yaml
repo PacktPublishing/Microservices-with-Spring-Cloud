@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  redisCommander:
+    image: tenstartups/redis-commander
+    command: --redis-host redis
+    depends_on:
+      - redis
+    networks:
+      - internal
+    ports:
+      - "8081:8081"
