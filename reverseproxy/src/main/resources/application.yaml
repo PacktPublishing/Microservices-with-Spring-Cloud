@@ -3,6 +3,7 @@ bookmarks:
     listOfServers: localhost:9090,localhost:9091
 
 zuul:
+  ignored-services: '*'
   routes:
-    bookmarks: /**
+    bookmarks: '/**'
   sensitive-headers:
