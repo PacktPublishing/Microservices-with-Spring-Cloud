@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Our Login Page</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css"/>
+</head>
+<body onload='document.f.username.focus();' style="padding: 1em">
+
+<h3>Login with Username and Password please</h3>
+
+<form name='f' th:action="@{/login}" method='POST'>
+    <div th:if="${param.error}">
+        <div class="alert alert-danger">
+            Invalid username and password.
+        </div>
+    </div>
+    <div th:if="${param.logout}">
+        <div class="alert alert-info">
+            You have been logged out.
+        </div>
+    </div>
+    <table>
+        <tr>
+            <td>User:</td>
+            <td><input class="form-control" type='text' name='username' value=''/></td>
+        </tr>
+        <tr>
+            <td>Password:</td>
+            <td><input class="form-control" type='password' name='password'/></td>
+        </tr>
+        <tr>
+            <td colspan='2'>
+                <button class="btn btn-primary" name="submit" type="submit">Login</button>
+            </td>
+        </tr>
+    </table>
+</form>
+
+<script src="/webjars/jquery/jquery.min.js"></script>
+<script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+</body>
+</html>

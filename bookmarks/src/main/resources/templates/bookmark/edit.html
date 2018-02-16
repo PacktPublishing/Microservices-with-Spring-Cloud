@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css"/>
+    <title th:if="${isEdit}">Bookmark Edit Form</title>
+    <title th:unless="${isEdit}">Bookmark Add Form</title>
+</head>
+<body class="container">
+<h1 th:if="${isEdit}">Bookmark Edit Form</h1>
+<h1 th:unless="${isEdit}">Bookmark Add Form</h1>
+
+<!--/*@thymesVar id="isEdit" type="java.lang.Boolean"*/-->
+<!--/*@thymesVar id="bookmark" type="com.packtpub.yummy.model.Bookmark"*/-->
+<form th:action="@{/bookmark/{id}(id=${isEdit}?${bookmark.uuid}:'')}" method="post" th:object="${bookmark}">
+    <fieldset>
+        <legend>Bookmark</legend>
+        <div class="form-group" th:classappend="${#fields.hasErrors('description')}?'has-error'">
+            <label for="description">
+                Description
+            </label>
+            <input type="text" class="form-control" th:field="*{description}"/>
+            <span class="help-inline has-danger"
+                  th:if="${#fields.hasErrors('description')}"
+                  th:errors="*{description}"
+            >hdsjfhkjs</span>
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('url')}?'has-error'">
+            <label for="url">
+                Url
+            </label>
+            <input type="url" class="form-control" th:field="*{url}"/>
+            <span class="help-inline has-danger"
+                  th:if="${#fields.hasErrors('url')}"
+                  th:errors="*{url}"
+            >hdsjfhkjs</span>
+        </div>
+        <th:block th:if="${isEdit}">
+            <input th:field="*{version}" type="hidden"/>
+            <input th:field="*{createdOn}" type="hidden"/>
+            <input th:field="*{updatedOn}" type="hidden"/>
+            <div style="text-align:right">
+                <div style="display:inline">
+                    <span style="font-weight: bold">Created on:</span> <span
+                        th:text="${#temporals.format(bookmark.createdOn)}">now</span>
+                </div>
+                <div style="display:inline">
+                    <span style="font-weight: bold">Last update on:</span> <span
+                        th:text="${#temporals.format(bookmark.updatedOn)}">now</span>
+                </div>
+            </div>
+        </th:block>
+        <div class="form-group">
+            <button class="btn btn-primary" type="submit">Save</button>
+            <button class="btn btn-secondary" type="reset">Reset</button>
+        </div>
+    </fieldset>
+</form>
+<script src="/webjars/jquery/jquery.min.js"></script>
+<script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+</body>
+</html>

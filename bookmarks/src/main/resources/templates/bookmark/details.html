@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Bookmark details view</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css"/>
+</head>
+<body class="container">
+<h1>Bookmark Details</h1>
+<div>
+    Hello <span sec:authentication="principal.username">Username</span>
+</div>
+<fieldset>
+
+    <!--/*@thymesVar id="bookmark" type="com.packtpub.yummy.model.Bookmark"*/-->
+    <label th:text="${bookmark.description}">Bookmark</label>
+    <div>
+        <a href="example.com" th:href="${bookmark.url}" th:text="${bookmark.url}">Link</a>
+    </div>
+    <div>
+        Created on: <span th:text="${#temporals.format(bookmark.createdOn)}">now</span>
+    </div>
+    <div>
+        Last update on: <span th:text="${#temporals.format(bookmark.updatedOn)}">now</span>
+    </div>
+    <div style="text-align: left">
+        <a role="button" class="btn btn-primary" th:href="@{/}">Back to the List</a>
+        <th:block sec:authorize="hasRole('ADMIN')">
+            <a role="button" class="btn btn-success"
+               th:href="@{/bookmark/{id}(id=${bookmark.uuid}, edit='true')}">Edit</a>
+            <form style="display: inline"
+                  th:action="@{/bookmark/{id}/delete(id=${bookmark.uuid})}" method="post">
+                <button class="btn btn-danger" type="submit">Delete</button>
+            </form>
+        </th:block>
+    </div>
+</fieldset>
+<script src="/webjars/jquery/jquery.min.js"></script>
+<script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+</body>
+</html>
