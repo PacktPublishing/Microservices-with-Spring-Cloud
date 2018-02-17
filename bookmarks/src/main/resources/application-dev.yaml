@@ -1,0 +1,9 @@
+
+
+logging.level:
+  org.springframework.web: DEBUG
+  com.packtpub: DEBUG
+
+eureka:
+  instance:
+    instance-id: '${spring.application.name}:${random.value}'

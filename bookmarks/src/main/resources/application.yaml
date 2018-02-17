@@ -5,15 +5,19 @@ spring:
       write-dates-as-timestamps: false
       indent-output: true
   redis:
-    host: localhost
+    host: 'localhost'
     port: 6379
   jpa:
     generate-ddl: true
     show-sql: true
-  application.name: bookmarks
+  application.name: 'bookmarks'
   session.store-type: redis
 
 server.port: 9090
 management:
-  port: 0
-  context-path: /internal
+  context-path: '/internal'
+
+eureka:
+  client:
+    service-url:
+      defaultZone: 'http://localhost:8761/eureka/'

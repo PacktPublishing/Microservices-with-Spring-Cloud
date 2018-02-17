@@ -1,9 +1,13 @@
-bookmarks:
-  ribbon:
-    listOfServers: localhost:9090,localhost:9091
-
 zuul:
   ignored-services: '*'
   routes:
     bookmarks: '/**'
   sensitive-headers:
+
+eureka:
+  client:
+    service-url:
+      defaultZone: 'http://localhost:8761/eureka/'
+spring:
+  application:
+    name: 'reverseproxy'
