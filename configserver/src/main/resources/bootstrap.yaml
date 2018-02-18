@@ -8,9 +8,13 @@ spring:
       server:
         native:
           search-locations: classpath:/configs
+  rabbitmq:
+    username: 'packt'
+    password: 'publishing'
 
 server.port: 8888
 management:
   port: 8889
   context-path: /internal
+
 
