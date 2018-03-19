@@ -9,9 +9,15 @@ elif [[ "$unamestr" == 'Darwin' ]]; then
 fi
 cd $BASEDIR
 
+docker-compose up -d
+
 DIRS=(configserver serviceregistry reverseproxy bookmarks)
 for i in "${DIRS[@]}"
 do
+  echo ""
+  echo "############################"
+  echo "Make sure $i is stopped"
+  ./stopService.sh $i
   echo "Start: $i"
   cd ../$i
   mvn clean install  -DskipTests -DskipITs

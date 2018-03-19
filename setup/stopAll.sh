@@ -9,27 +9,10 @@ elif [[ "$unamestr" == 'Darwin' ]]; then
 fi
 cd $BASEDIR
 
+docker-compose down
+
 DIRS=(configserver serviceregistry reverseproxy bookmarks)
 for i in "${DIRS[@]}"
 do
-  echo "Stopping: $i"
-  cd ../$i/target
-  if [ -f "application.pid" ]; then
-    echo "Found pid file for $i"
-    pkill -F application.pid
-    sleep 1
-    if [ -f "application.pid" ]; then
-        if pgrep -F "application.pid" > /dev/null
-        then
-            echo "Still running -- forcing kill"
-            pkill -9 -F application.pid
-        else
-            echo "Removing pid file"
-            rm application.pid
-        fi
-    fi
-  else
-     echo "Not running"
-  fi
-  cd $BASEDIR
+  ./stopService.sh $i
 done
