@@ -1,8 +1,8 @@
 package com.packtpub.yummy.config;
 
-import com.packtpub.yummy.service.MyUserDetailsService;
-import com.packtpub.yummy.service.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.ManagementServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -12,21 +12,22 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.util.matcher.AndRequestMatcher;
+import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
-import javax.sql.DataSource;
+import javax.servlet.http.HttpServletRequest;
 
 @Configuration
+@AllArgsConstructor
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    UserService userService;
-    @Autowired
-    UserDetailsService userDetailsService;
-    @Autowired
-    private DataSource datasource;
+    private final UserDetailsService userDetailsService;
+    private final ManagementServerProperties managementServerProperties;
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -39,6 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().loginPage("/login").permitAll()
                 .and()
                 .logout().permitAll();
+        http.csrf().requireCsrfProtectionMatcher(
+                allOf(CsrfFilter.DEFAULT_CSRF_MATCHER, not(accessingManagementServlet())));
     }
 
     @Autowired
@@ -46,4 +49,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         builder.userDetailsService(userDetailsService);
     }
 
+    private static RequestMatcher allOf(RequestMatcher... requestMatchers) {
+        return new AndRequestMatcher(requestMatchers);
+    }
+
+    private static RequestMatcher not(RequestMatcher requestMatcher) {
+        return new NegatedRequestMatcher(requestMatcher);
+    }
+
+    private RequestMatcher accessingManagementServlet() {
+        return httpServletRequest ->
+                isAccessingOnManagementPort(httpServletRequest)
+                        || isAccessingWithContextPath(httpServletRequest);
+    }
+
+    private boolean isAccessingOnManagementPort(HttpServletRequest httpServletRequest) {
+        return managementServerProperties.getPort() != null &&
+                httpServletRequest.getLocalPort() == managementServerProperties.getPort();
+    }
+
+    private boolean isAccessingWithContextPath(HttpServletRequest httpServletRequest) {
+        return managementServerProperties.getPort() == null &&
+                managementServerProperties.getContextPath() != null &&
+                httpServletRequest.getServletPath().startsWith(managementServerProperties.getContextPath());
+    }
 }

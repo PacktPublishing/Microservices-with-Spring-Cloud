@@ -5,6 +5,7 @@
 rabbitmq
 target/
 !.mvn/wrapper/maven-wrapper.jar
+application.pid
 
 ### STS ###
 .apt_generated
