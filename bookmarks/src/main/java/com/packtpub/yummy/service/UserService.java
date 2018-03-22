@@ -1,15 +1,10 @@
 package com.packtpub.yummy.service;
 
-import com.packtpub.yummy.model.MyUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,24 +27,4 @@ public class UserService {
                         .toArray(size -> new SqlParameterSource[size]));
     }
 
-    public MyUser findUserByUsername(String username) {
-        try {
-            MapSqlParameterSource source = new MapSqlParameterSource("username", username);
-            MyUser queryResult = jdbcTemplate.queryForObject("SELECT username, password, enabled FROM users WHERE username=:username",
-                    source,
-                    (rs, rownum) -> MyUser.builder().username(rs.getString("username"))
-                            .password(rs.getString("password"))
-                            .enabled(rs.getBoolean("enabled"))
-                            .build());
-            queryResult.setAuthorities(
-                    jdbcTemplate.query("SELECT role FROM user_roles WHERE username=:username",
-                            source,
-                            (rs, rownum) -> new SimpleGrantedAuthority(rs.getString("role")))
-
-            );
-            return queryResult;
-        }catch (IncorrectResultSizeDataAccessException ex){
-            throw new UsernameNotFoundException("Could not find user", ex);
-        }
-    }
 }

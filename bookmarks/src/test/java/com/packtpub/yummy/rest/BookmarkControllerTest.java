@@ -3,16 +3,12 @@ package com.packtpub.yummy.rest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.packtpub.yummy.model.Bookmark;
-import com.packtpub.yummy.service.BookmarkService;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -24,7 +20,6 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.never;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -39,15 +34,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class BookmarkControllerTest {
     @Autowired
     MockMvc mvc;
-    @SpyBean
-    BookmarkService bookmarkService;
     @Autowired  @Qualifier("_halObjectMapper")
     ObjectMapper objectMapper;
-
-    @Before
-    public void setup() {
-        Mockito.reset(bookmarkService);
-    }
 
     @Test
     public void getABookmark() throws Exception {
@@ -127,8 +115,6 @@ public class BookmarkControllerTest {
         ).andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$[0].field").value("description"));
-        Mockito.verify(bookmarkService, never()).update(Mockito.any(Bookmark.class));
-
     }
 
     @Test
@@ -147,8 +133,6 @@ public class BookmarkControllerTest {
         ).andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$[0].field").value("url"));
-        Mockito.verify(bookmarkService, never()).update(Mockito.any(Bookmark.class));
-
     }
 
     @Test

@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -20,11 +20,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.Arrays;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.atLeastOnce;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -35,13 +38,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@WithMockUser(username = "admin", roles = {"ADMIN","USER"})
+@WithMockUser(username = "admin", roles = {"ADMIN", "USER"})
 public class BookmarksControllerTest {
     @Autowired
     MockMvc mvc;
-    @SpyBean
+    @MockBean
     BookmarkService bookmarkService;
-    @Autowired  @Qualifier("_halObjectMapper")
+    @Autowired
+    @Qualifier("_halObjectMapper")
     ObjectMapper mapper;
 
     @Before
@@ -86,9 +90,10 @@ public class BookmarksControllerTest {
 
     @Test
     public void getAllBookmarks() throws Exception {
-        addBookmark(new Bookmark("Packt publishing", "http://packtpub.com"));
-        addBookmark(new Bookmark("orchit GmbH homepage", "http://orchit.de"));
 
+        when(bookmarkService.findAll()).thenReturn(Arrays.asList(
+                new Bookmark("Packt publishing", "http://packtpub.com"),
+                new Bookmark("orchit GmbH homepage", "http://orchit.de")));
         String result = mvc.perform(
                 MockMvcRequestBuilders.get("/bookmarks")
                         .accept("application/hal+json;charset=UTF-8", "application/json;charset=UTF-8")
