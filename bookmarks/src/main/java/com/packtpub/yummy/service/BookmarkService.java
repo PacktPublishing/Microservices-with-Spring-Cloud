@@ -23,14 +23,14 @@ public class BookmarkService {
     public UUID addBookmark(Bookmark bookmark) {
         UUID uuid = UUID.randomUUID();
         jdbcTemplate.update("INSERT INTO bookmark (url, uuid, version, description)" +
-                " VALUES (?,?,1,?)", bookmark.getUrl(), uuid, bookmark.getDescription());
+                " VALUES (?,?,1,?)", bookmark.getUrl(), uuid.toString(), bookmark.getDescription());
         System.out.println("http://localhost:8080/bookmark/" + uuid);
         return uuid;
     }
 
     public Bookmark find(UUID id) {
         return jdbcTemplate.queryForObject("SELECT * FROM bookmark WHERE uuid=?",
-                new BookmarkRowMapper(), id);
+                new BookmarkRowMapper(), id.toString());
 
     }
 
@@ -45,14 +45,14 @@ public class BookmarkService {
                 "UPDATE bookmark SET url=?, description=?, " +
                         " updatedon=current_timestamp(), version=version+1 " +
                         " WHERE uuid=? AND version =?",
-                bookmark.getUrl(), bookmark.getDescription(), bookmark.getUuid(), bookmark.getVersion()
+                bookmark.getUrl(), bookmark.getDescription(), bookmark.getUuid().toString(), bookmark.getVersion()
         );
         if (update != 1) throw new OptimisticLockingFailureException("Stale update detected for " + bookmark.getUuid());
         return find(bookmark.getUuid());
     }
 
     public void delete(UUID id) {
-        if (jdbcTemplate.update("DELETE FROM bookmark WHERE uuid=?", id) != 1)
+        if (jdbcTemplate.update("DELETE FROM bookmark WHERE uuid=?", id.toString()) != 1)
             throw new NotModifiedDataAccessException("Bookmark already gone");
     }
 

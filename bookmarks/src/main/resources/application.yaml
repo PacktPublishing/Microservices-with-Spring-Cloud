@@ -11,5 +11,9 @@ spring:
     generate-ddl: true
     show-sql: true
   session.store-type: redis
+  datasource:
+    url: "jdbc:mysql://localhost:3306/packtdb"
+    username: "packt"
+    password: "superSecret"
 
 server.port: 9090

@@ -1,8 +1,7 @@
 
 management:
-  context-path: '/internal'
-  security:
-    enabled: false
+  server:
+    servlet.context-path: '/internal'
 
 eureka:
   client:

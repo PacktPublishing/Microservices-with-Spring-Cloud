@@ -11,7 +11,7 @@ class BookmarkRowMapper implements RowMapper<Bookmark> {
     @Override
     public Bookmark mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new Bookmark(
-                rs.getObject("uuid", UUID.class),
+                UUID.fromString(rs.getString("uuid")),
                 rs.getString("description"),
                 rs.getString("url"),
                 rs.getInt("version"),

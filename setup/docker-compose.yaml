@@ -26,6 +26,18 @@ services:
       - internal
     ports:
       - "8081:8081"
+  mysqlbm:
+    image: mysql:8.0
+    security_opt:
+      - seccomp=unconfined
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: "packtdb"
+      MYSQL_USER: "packt"
+      MYSQL_PASSWORD: "superSecret"
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_ROOT_PASSWORD: "superDuperSecret"
 
 networks:
   internal:

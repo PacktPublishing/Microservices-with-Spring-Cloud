@@ -13,8 +13,10 @@ spring:
     password: 'publishing'
 
 server.port: 8888
+
 management:
-  port: 8889
-  context-path: /internal
+  server:
+    port: 8889
+    servlet.context-path: /internal
 
 

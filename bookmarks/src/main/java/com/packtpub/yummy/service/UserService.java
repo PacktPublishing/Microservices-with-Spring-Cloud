@@ -19,7 +19,7 @@ public class UserService {
         jdbcTemplate.update("INSERT INTO users(username, password)" +
                         " VALUES (:username,:password)",
                 new MapSqlParameterSource("username", userDetails.getUsername())
-                        .addValue("password", userDetails.getPassword()));
+                        .addValue("password", passwordEncoder.encode(userDetails.getPassword())));
         jdbcTemplate.batchUpdate("INSERT INTO user_roles(username, role) VALUES (:username, :role)",
                 (SqlParameterSource[]) userDetails.getAuthorities().stream()
                         .map(a -> new MapSqlParameterSource("username", userDetails.getUsername())
@@ -27,4 +27,10 @@ public class UserService {
                         .toArray(size -> new SqlParameterSource[size]));
     }
 
+    public boolean hasUser(String username){
+        return  !jdbcTemplate.query("select 1 from users where username=:username",
+                new MapSqlParameterSource("username",username)
+                ,(rs, rowNum) -> rs.getInt(1)
+                ).isEmpty();
+    }
 }

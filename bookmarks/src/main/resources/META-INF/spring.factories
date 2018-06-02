@@ -1,2 +1,2 @@
 org.springframework.context.ApplicationListener=\
-org.springframework.boot.system.ApplicationPidFileWriter
+org.springframework.boot.context.ApplicationPidFileWriter
