@@ -2,5 +2,7 @@ zuul:
   ignored-services: '*'
   routes:
     bookmarks: '/**'
+    users: '/user/**'
   sensitive-headers:
+  add-host-header: true
 

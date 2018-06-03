@@ -11,7 +11,7 @@ cd $BASEDIR
 
 docker-compose up -d
 
-DIRS=(configserver serviceregistry reverseproxy bookmarks)
+DIRS=(configserver serviceregistry reverseproxy bookmarks users)
 for i in "${DIRS[@]}"
 do
   echo ""

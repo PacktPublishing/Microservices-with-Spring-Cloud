@@ -4,21 +4,22 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
 public class Bookmark {
     @Length(max=255)
-    @NotEmpty
+    @NotEmpty @NotNull
     private String description;
     private LocalDateTime createdOn;
     private LocalDateTime updatedOn;
     @Length(max=255)
-    @NotEmpty
+    @NotEmpty  @NotNull
     @URL
     private String url;
     private UUID uuid;

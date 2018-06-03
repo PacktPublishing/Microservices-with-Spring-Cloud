@@ -1,4 +1,4 @@
-package com.packtpub.yummy.service;
+package com.packtpub.yummy.users.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -16,11 +16,12 @@ public class UserService {
     NamedParameterJdbcTemplate jdbcTemplate;
 
     public void addUser(UserDetails userDetails) {
-        jdbcTemplate.update("INSERT INTO users(username, password)" +
-                        " VALUES (:username,:password)",
+        jdbcTemplate.update("INSERT INTO users(username, password,enabled)" +
+                        " VALUES (lower(:username),:password,1)",
                 new MapSqlParameterSource("username", userDetails.getUsername())
                         .addValue("password", passwordEncoder.encode(userDetails.getPassword())));
-        jdbcTemplate.batchUpdate("INSERT INTO user_roles(username, role) VALUES (:username, :role)",
+        jdbcTemplate.batchUpdate("INSERT INTO authorities(username, authority) " +
+                        "VALUES (lower(:username), :role)",
                 (SqlParameterSource[]) userDetails.getAuthorities().stream()
                         .map(a -> new MapSqlParameterSource("username", userDetails.getUsername())
                                 .addValue("role", a.getAuthority()))
@@ -28,7 +29,7 @@ public class UserService {
     }
 
     public boolean hasUser(String username){
-        return  !jdbcTemplate.query("select 1 from users where username=:username",
+        return  !jdbcTemplate.query("select 1 from users where username=lower(:username)",
                 new MapSqlParameterSource("username",username)
                 ,(rs, rowNum) -> rs.getInt(1)
                 ).isEmpty();
