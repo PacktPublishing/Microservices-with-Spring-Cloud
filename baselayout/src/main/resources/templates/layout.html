@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head th:fragment="html-head(title, cssUrlPrefix)">
+    <meta charset="UTF-8"/>
+    <title th:text="${title}">List of all bookmarks</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css"
+          th:href="@{${cssUrlPrefix}+'/webjars/bootstrap/css/bootstrap.min.css'}"/>
+</head>
+
+<body>
+<header th:fragment="header(title)" class="row">
+    <h1 th:text="${title}" class="col-md-10 text-center">List of all bookmarks</h1>
+    <div class="col-md-2 text-right" style="margin-bottom: 1em; margin-top: 1em">
+        <div sec:authorize="isAnonymous()">
+            <a th:href="@{/user/login}" class="btn btn-sm btn-primary">
+                Login
+            </a>
+        </div>
+        <div sec:authorize="isAuthenticated()">
+            Hello <span sec:authentication="principal.username">Username</span>
+            <form th:action="@{/user/logout}" method="post" style="display: inline">
+                <button class="btn btn-danger" type="submit">Logout</button>
+            </form>
+        </div>
+    </div>
+</header>
+
+<footer th:fragment="footer(cssUrlPrefix)">
+    <div class="text-right" style="margin-top: 1em">
+        &copy; 2018 Packt publishing
+    </div>
+    <script th:src="@{${cssUrlPrefix}+'/webjars/jquery/jquery.min.js'}"></script>
+    <script th:src="@{${cssUrlPrefix}+'/webjars/bootstrap/js/bootstrap.min.js'}"></script>
+</footer>
+</body>
+</html>

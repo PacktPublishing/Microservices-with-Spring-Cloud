@@ -3,21 +3,23 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       xmlns="http://www.w3.org/1999/xhtml">
-<head>
+<head th:include="layout::html-head('List of all bookmarks','')">
     <meta charset="UTF-8"/>
     <title>List of all bookmarks</title>
     <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css"/>
 </head>
 <body class="container">
-<h1>List of all bookmarks</h1>
-<div>
-    Hello <span sec:authentication="principal.username">Username</span>
-</div>
-<div style="text-align: right;margin-bottom: 1em;">
+<div th:replace="layout::header('List of all bookmarks')">
+    <h1>List of all bookmarks</h1>
+    <div>
+        Hello <span sec:authentication="principal.username">Username</span>
+    </div>
     <form th:action="@{/logout}" method="post" style="display: inline">
         <button class="btn btn-danger" type="submit">Logout</button>
     </form>
-    <a role="button" class="btn btn-primary" type="button" sec:authorize="hasRole('ADMIN')"
+</div>
+<div style="text-align: right;margin-top: 1em;" sec:authorize="hasRole('ADMIN')">
+    <a role="button" class="btn btn-primary" type="button"
        th:href="@{/bookmark/}">Add Bookmark
     </a>
 </div>
@@ -39,7 +41,9 @@
         </td>
     </tr>
 </table>
-<script src="/webjars/jquery/jquery.min.js"></script>
-<script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+<footer th:replace="layout::footer('')">
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+</footer>
 </body>
 </html>

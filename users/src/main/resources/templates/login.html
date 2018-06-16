@@ -2,15 +2,17 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns="http://www.w3.org/1999/xhtml">
-<head>
+<head th:include="layout::html-head('Our Login Page','/user')">
     <title>Our Login Page</title>
     <link rel="stylesheet" href="/user/webjars/bootstrap/css/bootstrap.min.css"/>
 </head>
-<body onload='document.f.username.focus();' style="padding: 1em">
+<body onload='document.f.username.focus();' style="padding: 1em" class="container text-center">
+<header th:replace="layout::header('Login with Username and Password please')">
+    <h3>Login with Username and Password please</h3>
+</header>
 
-<h3>Login with Username and Password please</h3>
-
-<form name='f' th:action="@{/user/login}" method='POST'>
+<form name='f' th:action="@{/user/login}" method='POST' class="text-right"
+      style="display: inline-block; margin-top: 5em">
     <div th:if="${param.error}">
         <div class="alert alert-danger">
             Invalid username and password.
@@ -37,8 +39,9 @@
         </tr>
     </table>
 </form>
-
-<script src="/user/webjars/jquery/jquery.min.js"></script>
-<script src="/user/webjars/bootstrap/js/bootstrap.min.js"></script>
+<footer th:replace="layout::footer('/user')">
+    <script src="/user/webjars/jquery/jquery.min.js"></script>
+    <script src="/user/webjars/bootstrap/js/bootstrap.min.js"></script>
+</footer>
 </body>
 </html>
