@@ -1,0 +1,9 @@
+{
+  "name": "bookmarks",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^2.0.0",
+    "bower": "*",
+    "iron-ajax": "PolymerElements/iron-ajax#^2.1.3",
+    "install": "^1.0.4"
+  }
+}

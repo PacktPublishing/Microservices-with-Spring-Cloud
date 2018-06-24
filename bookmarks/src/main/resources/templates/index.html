@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:include="layout::html-head('Your bookmarks','')">
+        <meta charset="UTF-8"/>
+        <title>List of all bookmarks</title>
+        <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css"/>
+    </th:block>
+    <script>
+        window.Polymer = window.Polymer || {};
+        window.Polymer.dom = 'shadow';
+    </script>
+    <link rel="import" href="/components/elements.html"/>
+</head>
+<body class="container">
+<div th:replace="layout::header('Your bookmarks')">
+    <h1>List of all bookmarks</h1>
+    <div>
+        Hello <span sec:authentication="principal.username">Username</span>
+    </div>
+    <form th:action="@{/logout}" method="post" style="display: inline">
+        <button class="btn btn-danger" type="submit">Logout</button>
+    </form>
+</div>
+
+<bookmarks-view></bookmarks-view>
+
+<footer th:replace="layout::footer('')">
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+</footer>
+
+<script>
+    // <![CDATA[
+    function finishLazyLoading() {
+        console.log("Loaded")
+    }
+    var webComponentsSupported = (
+        'registerElement' in document &&
+        'import' in document.createElement('link') &&
+        'content' in document.createElement('template'));
+    if (!webComponentsSupported) {
+        var script = document.createElement('script');
+        script.async = true;
+        script.src = '/components/bower_components/webcomponentsjs/webcomponents-lite.js';
+        script.onload = finishLazyLoading;
+        document.head.appendChild(script);
+    } else {
+        console.log("Native support")
+        finishLazyLoading();
+    }
+    // ]]>
+</script>
+
+</body>
+</html>

@@ -184,6 +184,51 @@
           <executable>true</executable>
         </configuration>
       </plugin>
+      <plugin>
+        <artifactId>exec-maven-plugin</artifactId>
+        <groupId>org.codehaus.mojo</groupId>
+        <executions>
+          <execution>
+            <id>Bower update</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>bower</executable>
+              <arguments>
+                <argument>update</argument>
+              </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>Bower prune</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>bower</executable>
+              <arguments>
+                <argument>prune</argument>
+              </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>Bower install</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>bower</executable>
+              <arguments>
+                <argument>install</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 </project>

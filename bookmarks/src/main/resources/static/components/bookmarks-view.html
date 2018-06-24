@@ -1,0 +1,44 @@
+<link rel="import" href="bower_components/polymer/polymer.html"/>
+<link rel="import" href="bower_components/iron-ajax/iron-ajax.html"/>
+
+
+<dom-module id="bookmarks-view">
+    <template>
+        <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css"/>
+        <style></style>
+        <iron-ajax id="ajax" auto url="{{_url}}" handle-as="json"
+                   last-response="{{_bookmarks}}"></iron-ajax>
+
+        <table class="table">
+            <tbody>
+            <template is="dom-repeat" items="{{_bookmarks._embedded.bookmarkList}}" as="bookmark">
+            <tr>
+                <td>[[_displayIndex(index)]]</td>
+                <td>[[bookmark.description]]</td>
+                <td><a href="{{bookmark.url}}">{{bookmark.url}}</a></td>
+                <td>
+                </td>
+            </tr>
+            </template>
+            </tbody>
+        </table>
+    </template>
+    <script>
+        Polymer({
+            is: 'bookmarks-view',
+            properties: {
+                _bookmarks: {
+                    type: Array
+                },
+                _url: {
+                    type: String,
+                    value: '/bookmarks'
+                }
+            },
+            listeners: {},
+            _displayIndex: function(idx){
+                return idx+1;
+            }
+        })
+    </script>
+</dom-module>
