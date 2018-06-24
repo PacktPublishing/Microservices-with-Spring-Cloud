@@ -24,12 +24,17 @@ public class BookmarkController {
     @Autowired
     BookmarkService bookmarkService;
 
+    @GetMapping("template")
+    public Resource<Bookmark> getBookmarkTemplate() {
+        return assembler.toResource(new Bookmark("describe me","http://fix.me"));
+    }
+
     @GetMapping("{id}")
     public Resource<Bookmark> getBookmark(@PathVariable UUID id) {
         return assembler.toResource(bookmarkService.find(id));
     }
 
-    @PostMapping("{id}")
+    @PutMapping("{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public Resource<Bookmark> updateBookmark(@PathVariable UUID id, @RequestBody @Valid Bookmark bookmark) {
         return assembler.toResource(bookmarkService.update(bookmark.withUuid(id)));
@@ -40,7 +45,7 @@ public class BookmarkController {
     public ResponseEntity<Void> deleteBookmark(@PathVariable UUID id) {
         try {
             bookmarkService.delete(id);
-            return ResponseEntity.status(HttpStatus.GONE).build();
+            return ResponseEntity.status(HttpStatus.OK).build();
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }

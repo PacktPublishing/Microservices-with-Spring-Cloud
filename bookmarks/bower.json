@@ -4,6 +4,9 @@
     "polymer": "Polymer/polymer#^2.0.0",
     "bower": "*",
     "iron-ajax": "PolymerElements/iron-ajax#^2.1.3",
-    "install": "^1.0.4"
+    "install": "^1.0.4",
+    "paper-input": "polymerelements/paper-input#^2.2.3",
+    "paper-button": "polymerelements/paper-button#^2.1.1",
+    "paper-dialog": "polymerelements/paper-dialog#^2.1.1"
   }
 }

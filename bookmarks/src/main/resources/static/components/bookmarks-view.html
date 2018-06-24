@@ -1,27 +1,50 @@
 <link rel="import" href="bower_components/polymer/polymer.html"/>
+<link rel="import" href="bower_components/paper-button/paper-button.html"/>
 <link rel="import" href="bower_components/iron-ajax/iron-ajax.html"/>
+<link rel="import" href="bookmark-form.html"/>
 
 
 <dom-module id="bookmarks-view">
     <template>
         <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css"/>
-        <style></style>
+        <style>
+            paper-button.green {
+                background-color: var(--paper-green-500);
+                color: white;
+            }
+
+            paper-button.red {
+                background-color: var(--paper-red-500);
+                color: white;
+            }
+        </style>
         <iron-ajax id="ajax" auto url="{{_url}}" handle-as="json"
                    last-response="{{_bookmarks}}"></iron-ajax>
+        <iron-ajax id="xhr" ></iron-ajax>
 
+        <div style="text-align: right;margin-top: 5em;">
+            <template is="dom-if" if="[[_isAddAllowed(_bookmarks)]]">
+                <paper-button class="green" on-click="_add">Add Bookmark</paper-button>
+            </template>
+        </div>
         <table class="table">
             <tbody>
             <template is="dom-repeat" items="{{_bookmarks._embedded.bookmarkList}}" as="bookmark">
-            <tr>
-                <td>[[_displayIndex(index)]]</td>
-                <td>[[bookmark.description]]</td>
-                <td><a href="{{bookmark.url}}">{{bookmark.url}}</a></td>
-                <td>
-                </td>
-            </tr>
+                <tr>
+                    <td>[[_displayIndex(index)]]</td>
+                    <td>[[bookmark.description]]</td>
+                    <td><a href="{{bookmark.url}}">{{bookmark.url}}</a></td>
+                    <td>
+                        <template is="dom-if" if="[[_isEditAllowed(bookmark)]]">
+                            <paper-button class="red" on-click="_delete">Delete</paper-button>
+                            <paper-button class="green" on-click="_edit">Edit</paper-button>
+                        </template>
+                    </td>
+                </tr>
             </template>
             </tbody>
         </table>
+        <bookmark-form on-save="_save"></bookmark-form>
     </template>
     <script>
         Polymer({
@@ -36,8 +59,36 @@
                 }
             },
             listeners: {},
-            _displayIndex: function(idx){
-                return idx+1;
+            _displayIndex: function (idx) {
+                return idx + 1;
+            },
+            _isAddAllowed: function(bookmarks){
+                return typeof bookmarks._links.add !== 'undefined' &&
+                     typeof bookmarks._links.template !== 'undefined';
+            },
+            _isEditAllowed: function(bookmark){
+                return typeof bookmark._links.update !== 'undefined';
+            },
+            _add: function(){
+                this.$$('bookmark-form').showEditor(this._bookmarks._links.template.href,
+                    this._bookmarks._links.add.href
+                );
+            },
+            _edit: function(event){
+                this.$$('bookmark-form').showEditor(event.model.bookmark._links.update.href);
+            },
+            _delete: function(event){
+                this.$.xhr.url=event.model.bookmark._links.update.href;
+                this.$.xhr.method="DELETE";
+                var realThis = this;
+                this.$.xhr.generateRequest()
+                    .completes.then(
+                        function (request) {
+                            realThis.$.ajax.generateRequest();
+                        });
+            },
+            _save: function(event){
+                this.$.ajax.generateRequest();
             }
         })
     </script>

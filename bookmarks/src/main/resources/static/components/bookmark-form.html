@@ -1,0 +1,80 @@
+<link rel="import" href="bower_components/polymer/polymer.html"/>
+<link rel="import" href="bower_components/paper-button/paper-button.html"/>
+<link rel="import" href="bower_components/iron-ajax/iron-ajax.html"/>
+<link rel="import" href="bower_components/paper-input/paper-input.html"/>
+<link rel="import" href="bower_components/paper-dialog/paper-dialog.html"/>
+
+
+<dom-module id="bookmark-form">
+    <template>
+        <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css"/>
+        <style>
+            paper-button.green {
+                background-color: var(--paper-green-500);
+                color: white;
+            }
+            paper-button.blue {
+                background-color: var(--paper-blue-500);
+                color: white;
+            }
+        </style>
+        <iron-ajax id="ajax" auto url="{{_getUrl}}" handle-as="json"
+                   last-response="{{_bookmark}}"></iron-ajax>
+        <iron-ajax id="xhr" url={{_saveUrl}} method="POST"
+                   content-type="application/json"
+                   handle-as="json"></iron-ajax>
+        <paper-dialog on-iron-overlay-closed="_closed">
+            <h2>Edit Bookmark [[_bookmark.id]]</h2>
+            <paper-input label="Description" value="{{_bookmark.description}}"></paper-input>
+            <paper-input label="url" value="{{_bookmark.url}}"></paper-input>
+            <div class="buttons">
+                <paper-button class="blue" dialog-dismiss>Cancel</paper-button>
+                <paper-button class="green" dialog-confirm>Save</paper-button>
+            </div>
+        </paper-dialog>
+    </template>
+    <script>
+        Polymer({
+            is: 'bookmark-form',
+            properties: {
+                _bookmark: {
+                    type: Object
+                },
+                _saveUrl: {
+                    type: String
+                },
+                _getUrl: {
+                    type: String
+                }
+            },
+            listeners: {},
+            showEditor: function(getUrl,saveUrl) {
+                this._getUrl = getUrl;
+                this._saveUrl = saveUrl || getUrl;
+                this.$.ajax.generateRequest();
+                if (saveUrl) {
+                    this.$.xhr.method = "POST"
+                } else {
+                    this.$.xhr.method = "PUT"
+                }
+                this.$$('paper-dialog').toggle();
+            },
+            _closed: function(event){
+                if(event.type === 'iron-overlay-closed' && event.detail.confirmed){
+                    this._save();
+                }
+            },
+            _save: function(){
+                this.$.xhr.body=JSON.stringify(this._bookmark);
+                var realThis = this;
+                this.$.xhr.generateRequest()
+                    .completes.then(
+                        function (request) {
+                            realThis.dispatchEvent(new CustomEvent("save",{detail: request.reponse}));
+                        },function (rejected) {
+                            realThis.dispatchEvent(new CustomEvent("save-error",{detail: rejected.reponse}));
+                    });
+            }
+        });
+    </script>
+</dom-module>

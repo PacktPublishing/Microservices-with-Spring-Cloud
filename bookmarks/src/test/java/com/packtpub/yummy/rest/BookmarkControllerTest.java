@@ -55,7 +55,7 @@ public class BookmarkControllerTest {
         mvc.perform(
                 delete(location).accept("application/hal+json;charset=UTF-8", "application/json;charset=UTF-8")
                 .with(csrf())
-        ).andDo(print()).andExpect(status().isGone());
+        ).andDo(print()).andExpect(status().isOk());
 
         mvc.perform(
                 get(location).accept("application/hal+json;charset=UTF-8", "application/json;charset=UTF-8")
@@ -70,7 +70,7 @@ public class BookmarkControllerTest {
         mvc.perform(
                 delete(location).accept("application/hal+json;charset=UTF-8", "application/json;charset=UTF-8")
                         .with(csrf())
-        ).andDo(print()).andExpect(status().isGone());
+        ).andDo(print()).andExpect(status().isOk());
 
         mvc.perform(
                 delete(location).accept("application/hal+json;charset=UTF-8", "application/json;charset=UTF-8")
@@ -86,7 +86,7 @@ public class BookmarkControllerTest {
         Resource<Bookmark> output = getBookmark(location);
 
         String result = mvc.perform(
-                post(output.getId().getHref())
+                put(output.getId().getHref())
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept("application/hal+json;charset=UTF-8", "application/json;charset=UTF-8")
                         .content(objectMapper.writeValueAsString(output.getContent().withUrl("http://kulinariweb.de")))
@@ -107,7 +107,7 @@ public class BookmarkControllerTest {
         Resource<Bookmark> output = getBookmark(location);
         output.getContent().setDescription(null);
         mvc.perform(
-                post(output.getId().getHref())
+                put(output.getId().getHref())
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept("application/hal+json;charset=UTF-8", "application/json;charset=UTF-8")
                         .content(objectMapper.writeValueAsString(output.getContent()))
@@ -125,7 +125,7 @@ public class BookmarkControllerTest {
         Resource<Bookmark> output = getBookmark(location);
         output.getContent().setUrl("broken://url.me");
         mvc.perform(
-                post(output.getId().getHref())
+                put(output.getId().getHref())
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept("application/hal+json;charset=UTF-8", "application/json;charset=UTF-8")
                         .content(objectMapper.writeValueAsString(output.getContent()))
@@ -142,7 +142,7 @@ public class BookmarkControllerTest {
 
         Resource<Bookmark> output = getBookmark(location);
         mvc.perform(
-                post(output.getId().getHref())
+                put(output.getId().getHref())
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept("application/hal+json;charset=UTF-8", "application/json;charset=UTF-8")
                         .content(objectMapper.writeValueAsString(output.getContent().withUrl("http://kulinariweb.de")))
@@ -151,7 +151,7 @@ public class BookmarkControllerTest {
                 .andReturn().getResponse().getContentAsString();
 
         mvc.perform(
-                post(output.getId().getHref())
+                put(output.getId().getHref())
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept("application/hal+json;charset=UTF-8", "application/json;charset=UTF-8")
                         .content(objectMapper.writeValueAsString(output.getContent().withUrl("http://kulinariweb2.de")))
@@ -164,7 +164,7 @@ public class BookmarkControllerTest {
         Bookmark input = getSimpleBookmark();
 
         mvc.perform(
-                post("/bookmark/" + UUID.randomUUID())
+                put("/bookmark/" + UUID.randomUUID())
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept("application/hal+json;charset=UTF-8", "application/json;charset=UTF-8")
                         .content(objectMapper.writeValueAsString(input))
