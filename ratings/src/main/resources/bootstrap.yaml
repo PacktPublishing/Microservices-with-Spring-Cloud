@@ -1,0 +1,6 @@
+  spring:
+    application.name: 'ratings'
+    cloud:
+      config:
+        uri: 'http://localhost:8888'
+

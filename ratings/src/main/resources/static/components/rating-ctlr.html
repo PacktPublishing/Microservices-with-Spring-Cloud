@@ -1,0 +1,54 @@
+<link rel="import" href="bower_components/polymer/polymer.html"/>
+<link rel="import" href="bower_components/iron-star-rating/iron-star-rating.html"/>
+<link rel="import" href="bower_components/iron-ajax/iron-ajax.html"/>
+
+
+<dom-module id="rating-ctrl">
+    <template>
+        <iron-ajax id="ajax" auto url="{{_url}}" handle-as="json"
+                   last-response="{{_rating}}"></iron-ajax>
+        <iron-ajax id="xhr" url="{{_url}}" content-type="application/json"
+                   method="POST"></iron-ajax>
+        <iron-star-rating on-rating-selected="_selected" value="[[_round(_rating.rating)]]"></iron-star-rating>
+    </template>
+    <script>
+        Polymer({
+            is: 'rating-ctrl',
+            properties: {
+                _rating: {
+                    type: Object
+                },
+                type: {
+                    type: String
+                },
+                entityId: {
+                    type: String
+                },
+                _url: {
+                    type: String,
+                    computed: '_computeUrl(type, entityId)'
+                }
+            },
+            listeners: {},
+            _computeUrl: function (type, entityId) {
+                return "/ratings/votes/" + type + "/" + entityId;
+            },
+            _round: function (value) {
+                return value - value % 0.5;
+            },
+            _selected: function (event) {
+                this.$.xhr.body = JSON.stringify({
+                    rating: event.detail.rating
+                });
+                var realThis = this;
+                this.$.xhr.generateRequest()
+                    .completes.then(
+                    function (request) {
+                        realThis.$.ajax.generateRequest();
+                    }, function (reason) {
+                        console.log(reason)
+                    });
+            }
+        })
+    </script>
+</dom-module>

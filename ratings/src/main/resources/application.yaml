@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    url: "jdbc:mysql://localhost:3308/packtdb"
+    username: "packt"
+    password: "superSecret"
+
+server.port: 9095
