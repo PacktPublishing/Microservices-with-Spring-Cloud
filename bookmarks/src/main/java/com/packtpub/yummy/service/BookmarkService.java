@@ -18,6 +18,8 @@ import java.util.UUID;
 public class BookmarkService {
 
     @Autowired
+    RatingService ratingService;
+    @Autowired
     JdbcTemplate jdbcTemplate;
 
     public UUID addBookmark(Bookmark bookmark) {
@@ -54,6 +56,7 @@ public class BookmarkService {
     public void delete(UUID id) {
         if (jdbcTemplate.update("DELETE FROM bookmark WHERE uuid=?", id.toString()) != 1)
             throw new NotModifiedDataAccessException("Bookmark already gone");
+        ratingService.removeRatings(id);
     }
 
     @ResponseStatus(HttpStatus.NOT_MODIFIED)

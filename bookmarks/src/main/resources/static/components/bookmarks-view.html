@@ -2,6 +2,7 @@
 <link rel="import" href="bower_components/paper-button/paper-button.html"/>
 <link rel="import" href="bower_components/iron-ajax/iron-ajax.html"/>
 <link rel="import" href="bookmark-form.html"/>
+<link rel="import" href="/ratings/components/rating-ctrl.html"/>
 
 
 <dom-module id="bookmarks-view">
@@ -32,7 +33,10 @@
             <template is="dom-repeat" items="{{_bookmarks._embedded.bookmarkList}}" as="bookmark">
                 <tr>
                     <td>[[_displayIndex(index)]]</td>
-                    <td>[[bookmark.description]]</td>
+                    <td>
+                        [[bookmark.description]]
+                        <rating-ctrl type="bookmark" entity-id="[[bookmark.uuid]]"></rating-ctrl>
+                    </td>
                     <td><a href="{{bookmark.url}}">{{bookmark.url}}</a></td>
                     <td>
                         <template is="dom-if" if="[[_isEditAllowed(bookmark)]]">

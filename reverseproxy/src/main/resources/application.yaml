@@ -3,6 +3,7 @@ zuul:
   routes:
     bookmarks: '/**'
     users: '/user/**'
+    ratings: '/ratings/**'
   sensitive-headers:
   add-host-header: true
 

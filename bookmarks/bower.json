@@ -7,6 +7,7 @@
     "install": "^1.0.4",
     "paper-input": "polymerelements/paper-input#^2.2.3",
     "paper-button": "polymerelements/paper-button#^2.1.1",
-    "paper-dialog": "polymerelements/paper-dialog#^2.1.1"
+    "paper-dialog": "polymerelements/paper-dialog#^2.1.1",
+    "iron-star-rating": "chadweimer/iron-star-rating#^2.0.1"
   }
 }

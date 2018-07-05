@@ -21,6 +21,13 @@ public class RatingController {
         ratingRepository.persist(type, entityId, ratingVote.getRating());
     }
 
+    @DeleteMapping
+    public void deleteRating(@PathVariable String type,
+                             @PathVariable String entityId) {
+        log.info("Remove rating for {} with entity {}", type, entityId);
+        ratingRepository.remove(type, entityId);
+    }
+
     @GetMapping
     public RatingResult getRating(@PathVariable String type,
                                   @PathVariable String entityId) {

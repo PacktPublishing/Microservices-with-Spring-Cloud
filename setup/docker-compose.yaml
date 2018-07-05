@@ -50,7 +50,7 @@ services:
        MYSQL_PASSWORD: "superSecret"
        MYSQL_ROOT_HOST: "%"
        MYSQL_ROOT_PASSWORD: "superDuperSecret"
- mysqlra:
+  mysqlra:
     image: mysql:8.0
     security_opt:
       - seccomp=unconfined

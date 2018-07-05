@@ -5,4 +5,4 @@ create table ratings (
   created_on timestamp default now() not null
 );
 create index ratings_idx
-  on ratings (type, entityId);
+  on ratings (type, entity_id);

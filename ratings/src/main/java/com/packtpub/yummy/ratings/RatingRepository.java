@@ -39,4 +39,12 @@ public class RatingRepository {
             return new RatingResult(type, entityId, BigDecimal.ZERO, 0);
         }
     }
+
+    public void remove(String type, String entityId) {
+        jdbcTemplate.update("delete from ratings" +
+                        " where type=:type and entity_id=:entity_id",
+                new MapSqlParameterSource()
+                        .addValue("type", type)
+                        .addValue("entity_id", entityId));
+    }
 }
