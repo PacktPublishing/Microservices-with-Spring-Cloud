@@ -3,5 +3,9 @@ spring:
     url: "jdbc:mysql://localhost:3308/packtdb"
     username: "packt"
     password: "superSecret"
-
+  cloud:
+    stream:
+      bindings:
+        bookmarkDeletions:
+          group: ratings
 server.port: 9095
