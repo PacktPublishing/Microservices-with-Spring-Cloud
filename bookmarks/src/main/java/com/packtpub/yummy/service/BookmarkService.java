@@ -1,12 +1,16 @@
 package com.packtpub.yummy.service;
 
+import com.packtpub.yummy.config.AmqpConfig;
 import com.packtpub.yummy.model.Bookmark;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -14,11 +18,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.util.UUID;
 
 @Service
-@Transactional @RefreshScope
+@Transactional
+@RefreshScope
 public class BookmarkService {
 
     @Autowired
-    RatingService ratingService;
+    AmqpConfig.EventSource source;
+
     @Autowired
     JdbcTemplate jdbcTemplate;
 
@@ -56,7 +62,10 @@ public class BookmarkService {
     public void delete(UUID id) {
         if (jdbcTemplate.update("DELETE FROM bookmark WHERE uuid=?", id.toString()) != 1)
             throw new NotModifiedDataAccessException("Bookmark already gone");
-        ratingService.removeRatings(id);
+        source.bookmarkDeletions().send(MessageBuilder
+                .withPayload(
+                        new DeletionEvent("bookmark", id.toString()))
+                .build());
     }
 
     @ResponseStatus(HttpStatus.NOT_MODIFIED)
@@ -67,4 +76,10 @@ public class BookmarkService {
         }
     }
 
+    @Data
+    @AllArgsConstructor
+    public static class DeletionEvent {
+        String type;
+        String entityId;
+    }
 }
