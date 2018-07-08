@@ -59,7 +59,7 @@ public class RatingService {
                     throw new RuntimeException(exception);
                 }
             }
-        }.run();
+        }.execute();
     }
 
     private String getCookieValue(String name) {
