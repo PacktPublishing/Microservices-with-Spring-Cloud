@@ -23,3 +23,6 @@ spring:
     addresses: localhost:5672
 server:
   use-forward-headers: true
+logging:
+  pattern:
+    level: "CID:%X{correlationId:-} %5p"
