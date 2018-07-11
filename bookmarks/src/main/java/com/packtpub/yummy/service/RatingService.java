@@ -45,6 +45,7 @@ public class RatingService {
             @Override
             protected Void run() throws Exception {
                 restTemplate.exchange(entity, Void.class);
+                Thread.sleep((long) (500 * Math.random()));
                 return null;
             }
 

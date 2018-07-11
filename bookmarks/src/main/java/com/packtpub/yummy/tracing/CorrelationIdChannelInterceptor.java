@@ -14,7 +14,10 @@ import static org.springframework.integration.IntegrationMessageHeaderAccessor.C
 
 @Component
 @Slf4j
-@GlobalChannelInterceptor(order = Ordered.HIGHEST_PRECEDENCE)
+@GlobalChannelInterceptor(
+        order = Ordered.HIGHEST_PRECEDENCE,
+        patterns = {"!hystrixStreamOutput*", "*"}
+)
 public class CorrelationIdChannelInterceptor implements ChannelInterceptor {
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
