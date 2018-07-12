@@ -11,10 +11,17 @@ services:
       RABBITMQ_DEFAULT_PASS: "publishing"
     volumes:
       - ./rabbitmq:/var/lib/rabbitmq
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - "9410:9410"
+      - "9411:9411"
+    links:
+      - rabbitmq
+    environment:
+      RABBIT_URI: "amqp://packt:publishing@rabbitmq:5672"
   redis:
     image: "redis:alpine"
-    networks:
-      - internal
     ports:
       - "6379:6379"
   redisCommander:
@@ -22,8 +29,6 @@ services:
     command: --redis-host redis
     depends_on:
       - redis
-    networks:
-      - internal
     ports:
       - "8081:8081"
   mysqlbm:
@@ -62,6 +67,3 @@ services:
       MYSQL_PASSWORD: "superSecret"
       MYSQL_ROOT_HOST: "%"
       MYSQL_ROOT_PASSWORD: "superDuperSecret"
-
-networks:
-  internal:
