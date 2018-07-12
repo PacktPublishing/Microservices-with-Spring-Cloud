@@ -4,4 +4,8 @@ spring:
     username: "packt"
     password: "superSecret"
 
-server.port: 9090
+eureka:
+  instance:
+    metadata-map:
+      user.name: actuator
+      user.password: secret
