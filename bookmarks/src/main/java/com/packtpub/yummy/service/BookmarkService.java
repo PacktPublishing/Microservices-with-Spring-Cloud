@@ -23,9 +23,6 @@ import java.util.UUID;
 public class BookmarkService {
 
     @Autowired
-    RatingService ratingService;
-
-    @Autowired
     AmqpConfig.EventSource source;
 
     @Autowired
@@ -69,7 +66,6 @@ public class BookmarkService {
                 .withPayload(
                         new DeletionEvent("bookmark", id.toString()))
                 .build());
-        ratingService.removeRatings(id);
     }
 
     @ResponseStatus(HttpStatus.NOT_MODIFIED)
