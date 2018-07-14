@@ -14,7 +14,6 @@ eureka:
 spring:
   jackson:
     serialization:
-      write-dates-as-timestamps: false
       indent-output: true
   redis:
     host: localhost
