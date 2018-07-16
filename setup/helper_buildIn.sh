@@ -6,17 +6,8 @@
 
 DIR=`dirname $1`
 BUILD_ERROR_LOG=${2=builderrors.log}
-TYPE=$3
 
 cd $DIR
-#When filter is set and file is not present skip dir
-if [ -n "${TYPE+set}" ]; then
-    if [ ! -f "$TYPE.marker" ]; then
-        echo "$TYPE.marker not present in $DIR, skipping"
-        exit 0
-    fi
-    echo "$TYPE.marker present in $DIR, compiling!"
-fi
 
 mvn clean install -DskipTests -DskipITs
 

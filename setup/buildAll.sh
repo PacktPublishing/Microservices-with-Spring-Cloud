@@ -13,35 +13,7 @@ elif [[ "$unamestr" == 'Darwin' ]]; then
 fi
 cd $BASEDIR
 
-usage(){
-  cat << EOF
-usage: $0 options
-
-This builds all services or services of a given type.
-
-OPTIONS:
-   -h      Show this message
-   -t      type to install like INFRA or SERVICE, optional
-EOF
-exit
-}
-
-while getopts "t:h" opt; do
-  case $opt in
-    t)
-      TYPE=$OPTARG
-      ;;
-    h)
-      usage
-      ;;
-    \?)
-      echo "Invalid option: -$OPTARG" >&2
-      usage
-      ;;
-  esac
-done
-
 echo Searching for pom files in `$BASEDIR/..`
-find .. -name pom.xml -exec ./helper_buildIn.sh {} $BASEDIR/builderrors.log $TYPE \;
+find .. -name pom.xml -exec ./helper_buildIn.sh {} $BASEDIR/builderrors.log \;
 
 echo "Done compiling!"
