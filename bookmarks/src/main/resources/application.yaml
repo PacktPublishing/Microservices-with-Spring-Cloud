@@ -4,8 +4,3 @@ spring:
     username: "packt"
     password: "superSecret"
 
-eureka:
-  instance:
-    metadata-map:
-      user.name: actuator
-      user.password: secret

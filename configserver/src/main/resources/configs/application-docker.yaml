@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: "jdbc:mysql://db:3306/packtdb"
+  redis:
+    host: "redis"
+  rabbitmq:
+    host: "rabbitmq"
+eureka:
+  client:
+    service-url:
+      defaultZone: 'http://serviceregistry:8761/eureka/'
+management:
+  server:
+    port: 11111
+server:
+  port: 8080

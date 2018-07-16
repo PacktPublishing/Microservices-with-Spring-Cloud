@@ -2,5 +2,10 @@ spring:
   application.name: 'turbine'
   cloud:
     config:
+      failFast: true
+      retry:
+        max-attempts: 60
+      discovery:
+        enabled: false
       uri: 'http://localhost:8888'
 

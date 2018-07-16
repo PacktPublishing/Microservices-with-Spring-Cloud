@@ -1,2 +1,5 @@
 
 server.port: 9999
+management:
+  server:
+    port: 11112

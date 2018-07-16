@@ -2,5 +2,11 @@ spring:
   application.name: 'admin'
   cloud:
     config:
+      enabled: true
+      failFast: true
+      retry:
+        max-attempts: 60
+      discovery:
+        enabled: false
       uri: 'http://localhost:8888'
 

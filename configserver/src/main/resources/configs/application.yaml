@@ -1,13 +1,12 @@
 
 management:
-  server:
-    servlet.context-path: '/internal'
   endpoints:
     web:
       exposure:
         include: "*"
-
 eureka:
+  instance:
+    preferIpAddress: true
   client:
     service-url:
       defaultZone: 'http://localhost:8761/eureka/'
@@ -23,12 +22,14 @@ spring:
   rabbitmq:
     username: 'packt'
     password: 'publishing'
-    addresses: localhost:5672
   sleuth.sampler.probability: 0.9
+  cloud:
+    config:
+      #otherwise the clients would lead to a lot of logging and load on the configserver
+      server.health.enabled: false
+      #otherwise we can't override the port via command line args
+      overrideSystemProperties: false
+
 
 server:
   use-forward-headers: true
-
-#logging:
-#  pattern:
-#    level: "CID:%X{correlationId:-} %5p"

@@ -1,8 +1,8 @@
 
 
-logging.level:
-  org.springframework.web: DEBUG
-  com.packtpub: DEBUG
+#logging.level:
+#  org.springframework.web: DEBUG
+#  com.packtpub: DEBUG
 
 eureka:
   instance:

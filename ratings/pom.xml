@@ -139,6 +139,7 @@
     </repositories>
 
     <build>
+        <finalName>service</finalName>
         <resources>
             <resource>
                 <filtering>true</filtering>
