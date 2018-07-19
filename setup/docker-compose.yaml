@@ -1,8 +1,9 @@
-version: '3'
+version: '2'
 
 services:
   rabbitmq:
     image: "rabbitmq:3.7-management"
+    restart: on-failure
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -11,28 +12,38 @@ services:
       RABBITMQ_DEFAULT_PASS: "publishing"
     volumes:
       - ./rabbitmq:/var/lib/rabbitmq
+
   zipkin:
     image: openzipkin/zipkin
     ports:
       - "9410:9410"
       - "9411:9411"
-    links:
+    depends_on:
       - rabbitmq
     environment:
       RABBIT_URI: "amqp://packt:publishing@rabbitmq:5672"
+    extends:
+      file: ./dc-common.yaml
+      service: common_java
+
   redis:
     image: "redis:alpine"
+    restart: on-failure
     ports:
       - "6379:6379"
+
   redisCommander:
     image: tenstartups/redis-commander
     command: --redis-host redis
+    restart: on-failure
     depends_on:
       - redis
     ports:
       - "8081:8081"
+
   mysqlbm:
     image: mysql:8.0
+    restart: on-failure
     security_opt:
       - seccomp=unconfined
     ports:
@@ -43,20 +54,24 @@ services:
       MYSQL_PASSWORD: "superSecret"
       MYSQL_ROOT_HOST: "%"
       MYSQL_ROOT_PASSWORD: "superDuperSecret"
+
   mysqlus:
-     image: mysql:8.0
-     security_opt:
+    image: mysql:8.0
+    restart: on-failure
+    security_opt:
        - seccomp=unconfined
-     ports:
+    ports:
        - "3307:3306"
-     environment:
+    environment:
        MYSQL_DATABASE: "packtdb"
        MYSQL_USER: "packt"
        MYSQL_PASSWORD: "superSecret"
        MYSQL_ROOT_HOST: "%"
        MYSQL_ROOT_PASSWORD: "superDuperSecret"
+
   mysqlra:
     image: mysql:8.0
+    restart: on-failure
     security_opt:
       - seccomp=unconfined
     ports:
@@ -67,3 +82,108 @@ services:
       MYSQL_PASSWORD: "superSecret"
       MYSQL_ROOT_HOST: "%"
       MYSQL_ROOT_PASSWORD: "superDuperSecret"
+
+### services
+  admin:
+    build: ../admin
+    ports:
+      - "6060:8080"
+    depends_on:
+      - configserver
+      - rabbitmq
+    extends:
+      file: ./dc-common.yaml
+      service: common_java
+
+  bookmarks_service:
+    build: ../bookmarks
+    depends_on:
+      - configserver
+      - mysqlbm
+      - redis
+      - serviceregistry
+      - rabbitmq
+    links:
+      - "mysqlbm:db"
+    extends:
+      file: ./dc-common.yaml
+      service: common_java
+
+  configserver:
+    build: ../configserver
+    extends:
+      file: ./dc-common.yaml
+      service: common_java
+
+  hystrixdashboard:
+    build: ../hystrixdashboard
+    ports:
+      - "9998:8080"
+    depends_on:
+      - configserver
+      - rabbitmq
+      - turbine
+    extends:
+      file: ./dc-common.yaml
+      service: common_java
+
+  ratings_service:
+    build: ../ratings
+    depends_on:
+      - configserver
+      - mysqlra
+      - redis
+      - rabbitmq
+    links:
+      - "mysqlra:db"
+    extends:
+      file: ./dc-common.yaml
+      service: common_java
+
+  reverseproxy:
+    build: ../reverseproxy
+    ports:
+      - "8080:8080"
+    depends_on:
+      - configserver
+      - rabbitmq
+      - redis
+    extends:
+      file: ./dc-common.yaml
+      service: common_java
+
+  serviceregistry:
+    build: ../serviceregistry
+    restart: on-failure
+    ports:
+      - "8761:8761"
+    depends_on:
+      - configserver
+      - rabbitmq
+    extends:
+      file: ./dc-common.yaml
+      service: common_java
+
+  turbine:
+    build: ../turbine
+    depends_on:
+      - configserver
+      - rabbitmq
+      - serviceregistry
+    extends:
+      file: ./dc-common.yaml
+      service: common_java
+
+  users_service:
+    build: ../users
+    depends_on:
+      - configserver
+      - mysqlus
+      - redis
+      - rabbitmq
+      - serviceregistry
+    links:
+      - "mysqlus:db"
+    extends:
+      file: ./dc-common.yaml
+      service: common_java
