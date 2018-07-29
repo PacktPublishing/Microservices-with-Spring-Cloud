@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: zipkin
+  name: zipkin
+spec:
+  containers:
+  - env:
+    - name: RABBIT_URI
+      value: amqp://packt:publishing@rabbitmq:5672
+    image: openzipkin/zipkin
+    name: zipkin
+    imagePullPolicy: Always
+    ports:
+    - containerPort: 9410
+    - containerPort: 9411
+  restartPolicy: OnFailure
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: zipkin-service
+spec:
+  selector:
+    app: zipkin
+  ports:
+  - protocol: TCP
+    port: 9410
+    name: api
+  - protocol: TCP
+    port: 9411
+    name: ui

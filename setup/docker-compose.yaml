@@ -86,6 +86,7 @@ services:
 ### services
   admin:
     build: ../admin
+    image: localhost:5000/admin
     ports:
       - "6060:8080"
     depends_on:
@@ -97,6 +98,7 @@ services:
 
   bookmarks_service:
     build: ../bookmarks
+    image: localhost:5000/bookmarks
     depends_on:
       - configserver
       - mysqlbm
@@ -111,12 +113,14 @@ services:
 
   configserver:
     build: ../configserver
+    image: localhost:5000/configserver
     extends:
       file: ./dc-common.yaml
       service: common_java
 
   hystrixdashboard:
     build: ../hystrixdashboard
+    image: localhost:5000/hystrixdashboard
     ports:
       - "9998:8080"
     depends_on:
@@ -129,6 +133,7 @@ services:
 
   ratings_service:
     build: ../ratings
+    image: localhost:5000/ratings
     depends_on:
       - configserver
       - mysqlra
@@ -142,6 +147,7 @@ services:
 
   reverseproxy:
     build: ../reverseproxy
+    image: localhost:5000/reverseproxy
     ports:
       - "8080:8080"
     depends_on:
@@ -154,6 +160,7 @@ services:
 
   serviceregistry:
     build: ../serviceregistry
+    image: localhost:5000/serviceregistry
     restart: on-failure
     ports:
       - "8761:8761"
@@ -166,6 +173,7 @@ services:
 
   turbine:
     build: ../turbine
+    image: localhost:5000/turbine
     depends_on:
       - configserver
       - rabbitmq
@@ -176,6 +184,7 @@ services:
 
   users_service:
     build: ../users
+    image: localhost:5000/users
     depends_on:
       - configserver
       - mysqlus

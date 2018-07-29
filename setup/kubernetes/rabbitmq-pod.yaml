@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: rabbitmq
+  name: rabbitmq
+spec:
+  containers:
+  - env:
+    - name: RABBITMQ_DEFAULT_PASS
+      value: publishing
+    - name: RABBITMQ_DEFAULT_USER
+      value: packt
+    image: rabbitmq:3.7-management
+    name: rabbitmq
+    imagePullPolicy: Always
+    ports:
+    - containerPort: 5672
+    - containerPort: 15672
+    volumeMounts:
+    - mountPath: /var/lib/rabbitmq
+      name: rabbitmq-claim0
+  restartPolicy: OnFailure
+  volumes:
+  - name: rabbitmq-claim0
+    persistentVolumeClaim:
+      claimName: rabbitmq-claim0
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: rabbitmq
+spec:
+  selector:
+    app: rabbitmq
+  ports:
+  - protocol: TCP
+    port: 5672
+    name: api
+  - protocol: TCP
+    port: 15672
+    name: ui
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: rabbitmq-claim0
+  name: rabbitmq-claim0
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi

@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: turbine
+  name: turbine
+spec:
+  containers:
+  - image: localhost:5000/turbine
+    name: turbine
+    imagePullPolicy: Always
+    ports:
+    - containerPort: 8080
+    - containerPort: 11111
+    resources:
+      limits:
+        memory: 450Mi
+  restartPolicy: OnFailure
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: turbine
+spec:
+  selector:
+    app: turbine
+  ports:
+  - protocol: TCP
+    port: 8080
+    name: api
+  - protocol: TCP
+    port: 11111
+    name: actuator

@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: hystrixdashboard
+  name: hystrixdashboard
+spec:
+  containers:
+  - image: localhost:5000/hystrixdashboard
+    name: hystrixdashboard
+    imagePullPolicy: Always
+    env:
+    - name: ENVIRONMENT
+      value: 'kubernetes'
+    ports:
+    - containerPort: 8080
+    - containerPort: 11111
+    resources:
+      limits:
+        memory: 400Mi
+  restartPolicy: OnFailure
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: hystrixdashboard-service
+spec:
+  selector:
+    app: hystrixdashboard
+  ports:
+  - protocol: TCP
+    port: 8080
+    name: api
+  - protocol: TCP
+    port: 11111
+    name: actuator

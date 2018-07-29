@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    app: mysqlra
+  name: mysqlra
+spec:
+  containers:
+  - image: mysql:8.0
+    name: mysqlra
+    env:
+    - name: MYSQL_DATABASE
+      value: packtdb
+    - name: MYSQL_PASSWORD
+      value: superSecret
+    - name: MYSQL_ROOT_HOST
+      value: '%'
+    - name: MYSQL_ROOT_PASSWORD
+      value: superDuperSecret
+    - name: MYSQL_USER
+      value: packt
+    imagePullPolicy: Always
+    ports:
+    - containerPort: 3306
+    resources: {}
+  restartPolicy: OnFailure
+status: {}
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: mysqlra
+spec:
+  selector:
+    app: mysqlra
+  ports:
+  - protocol: TCP
+    port: 3306
+    name: api

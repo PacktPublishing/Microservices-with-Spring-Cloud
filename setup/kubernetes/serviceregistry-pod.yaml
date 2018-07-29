@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: serviceregistry
+  name: serviceregistry
+spec:
+  containers:
+  - image: localhost:5000/serviceregistry
+    name: serviceregistry
+    imagePullPolicy: Always
+    ports:
+    - containerPort: 8761
+    - containerPort: 11111
+    resources:
+      limits:
+        memory: 450Mi
+  restartPolicy: OnFailure
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: serviceregistry
+spec:
+  selector:
+    app: serviceregistry
+  ports:
+  - protocol: TCP
+    port: 8761
+    name: api
+  - protocol: TCP
+    port: 11111
+    name: actuator

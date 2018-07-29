@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: ratings
+  name: ratings
+spec:
+  containers:
+  - image: localhost:5000/ratings
+    name: users
+    imagePullPolicy: Always
+    env:
+    - name: ENVIRONMENT
+      value: 'kubernetes'
+    - name: DB_NAME
+      value: 'mysqlra'
+    ports:
+    - containerPort: 8080
+    - containerPort: 11111
+    resources:
+      limits:
+        memory: 550Mi
+  restartPolicy: OnFailure
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ratings-service
+spec:
+  selector:
+    app: ratings
+  ports:
+  - protocol: TCP
+    port: 8080
+    name: api
+  - protocol: TCP
+    port: 11111
+    name: actuator

@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: "jdbc:mysql://db:3306/packtdb"
+    url: "jdbc:mysql://${db.name:db}:3306/packtdb"
   redis:
     host: "redis"
   rabbitmq:

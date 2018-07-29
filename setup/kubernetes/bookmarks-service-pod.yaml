@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: bookmarks
+  name: bookmarks
+spec:
+  containers:
+  - image: localhost:5000/bookmarks
+    name: bookmarks
+    imagePullPolicy: Always
+    env:
+    - name: ENVIRONMENT
+      value: 'kubernetes'
+    - name: DB_NAME
+      value: 'mysqlbm'
+    ports:
+    - containerPort: 8080
+    - containerPort: 11111
+    resources:
+      limits:
+        memory: 550Mi
+  restartPolicy: OnFailure
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: bookmarks-service
+spec:
+  selector:
+    app: bookmarks
+  ports:
+  - protocol: TCP
+    port: 8080
+    name: api
+  - protocol: TCP
+    port: 11111
+    name: actuator
