@@ -16,21 +16,31 @@ You will also see what needs to be done to upgrade a spring boot 1.x service to 
 ## Instructions and Navigation
 ### Assumed Knowledge
 To fully benefit from the coverage included in this course, you will need:<br/>
+
 	Spring Framework knowledge
+
 	Spring Boot knowledge, ideally from lesson 1-2 of this course
+
 	An understanding of basic HTML and CSS syntax
+
 	(Optional) Experience with deployment of java services
 
 ### Technical Requirements
 This course has the following software requirements:<br/>
 	IntelliJ IDEA (ideally ultimate, there is a trial version for 30 days!)
+
 	Java 8+
+
 	Maven 3,x (also included in intelliJ)
 
 This course has been tested on the following system configuration:
+
 	OS: Windows 7, MacOS
+
 	Processor: Quad Core 3.0 Ghz
+
 	Memory: 16GB
+
 	Hard Disk Space: 500MB
 
 
